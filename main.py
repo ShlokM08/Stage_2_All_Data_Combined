@@ -17,7 +17,7 @@ def get_base64_image(image_file):
     with open(image_file, "rb") as image:
         encoded = base64.b64encode(image.read()).decode()
     return encoded
-
+#s
 # Add custom CSS with backdrop image
 def set_background(image_file):
     base64_image = get_base64_image(image_file)
