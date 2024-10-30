@@ -2,38 +2,96 @@ import streamlit as st
 from dotenv import load_dotenv
 from auth import *
 from database import *
-#from admin_features.admin_main import * # Isse ni ho rha code import
 from admin_features import *
 from moderator_features import *
-
+import os
+from pymongo import MongoClient
+import base64
 
 # Load the environment variables first
 load_dotenv()
 default_users_path = os.getenv("DEFAULT_USERS_PATH")
 
-# Initialize database
-# def initialize_database():
-#     if 'db' not in st.session_state:
-#         st.session_state.db = db # Imported from the database.py
-#         st.session_state.client = client
+# Function to encode image to base64
+def get_base64_image(image_file):
+    with open(image_file, "rb") as image:
+        encoded = base64.b64encode(image.read()).decode()
+    return encoded
 
+# Add custom CSS with backdrop image
+def set_background(image_file):
+    base64_image = get_base64_image(image_file)
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+           background-image: url("data:image/jpeg;base64,{base64_image}");
+            background-size: cover;
+            background-position: center;
+        }}
+        
+        .main {{ background-color: rgba(255, 255, 255, 0.8); padding: 20px; border-radius: 8px; }}
+        
+        /* Title and Headers */
+        .title-style {{ 
+            font-family: 'Arial', sans-serif; 
+            color: #333; 
+            font-size: 2.5em; 
+            text-align: center; 
+            margin-top: 20px; 
+        }}
+        .subtitle-style {{ 
+            font-family: 'Arial', sans-serif; 
+            color: #555; 
+            font-size: 1.5em; 
+            text-align: center; 
+            margin-bottom: 20px; 
+        }}
+
+        /* Buttons */
+        .stButton > button {{
+            background-color: #6c757d; 
+            color: white; 
+            padding: 10px 20px;
+            border-radius: 5px; 
+            border: none; 
+            font-size: 1em;
+            cursor: pointer;
+        }}
+        .stButton > button:hover {{
+            background-color: #5a6268;
+        }}
+
+        /* Input fields */
+        .stTextInput > div > input {{
+            border: 1px solid #ddd;
+            padding: 8px;
+            font-size: 1em;
+            border-radius: 4px;
+            width: 100%;
+        }}
+        
+        /* Error and Warning Messages */
+        .stAlert {{
+            color: #d9534f;
+            font-weight: bold;
+        }}
+        </style>
+        """, unsafe_allow_html=True
+    )
+
+# Initialize database
 def initialize_database():
     if 'client' not in st.session_state or st.session_state.client is None:
         st.session_state.client = MongoClient(MONGO_URI)  # Ensure the client is always initialized
         st.session_state.db = st.session_state.client['kushal_maa_data']
 
-
-# Demo for admin page
-# def admin_page(usr_name):
-#     st.title(usr_name)
-
-# Demo for moderator_page
-# def moderator_page(usr_name):
-#     st.title(usr_name)
-
-    
 def main():
-    st.title("Kushal Maa Platform")
+    # Set background image (provide path to your local image)
+    set_background("WIN_20240316_23_02_33_Pro.jpg")
+    
+    st.markdown("<h1 class='title-style'>Kushal Maa Platform</h1>", unsafe_allow_html=True)
+    st.markdown("<p class='subtitle-style'>An Interactive Platform for Admins and Moderators</p>", unsafe_allow_html=True)
     
     # Initialize database connection
     initialize_database()
@@ -48,8 +106,8 @@ def main():
         # Add the json file of default users to the database
         insert_initial_users_from_file(default_users_path)
         
-        # Now take the user input from the user
-        email = st.text_input("Please enter your registered Email")
+        # User input section
+        email = st.text_input("Please enter your registered Email", placeholder="Enter your email")
         
         if st.button("Login", key="login_button"):
             if email:
@@ -59,7 +117,7 @@ def main():
                     st.session_state.logged_in = True
                     st.session_state.user_name = user_name
                     st.session_state.user_type = user["user_type"]
-                    st.rerun()
+                    st.experimental_rerun()
                 else:
                     st.error("User email id not registered. Please Contact Admin")
             else:
@@ -81,7 +139,7 @@ def main():
                 st.session_state.client.close()
                 del st.session_state.client
                 del st.session_state.db
-            st.rerun()
+            st.experimental_rerun()
 
 if __name__ == "__main__":
     main()
