@@ -8,6 +8,7 @@ import os
 from pymongo import MongoClient
 import base64
 
+from whatsapp import *
 # Load the environment variables first
 load_dotenv()
 default_users_path = os.getenv("DEFAULT_USERS_PATH")

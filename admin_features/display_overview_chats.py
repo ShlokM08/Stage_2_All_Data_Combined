@@ -9,6 +9,7 @@ from pymongo import MongoClient
 from typing import List, Dict
 from datetime import datetime
 
+
 def get_unique_group_names() -> List[str]:
     """Get unique group names from whatsapp_chats collection"""
     try:
@@ -136,128 +137,130 @@ def format_duration(seconds: int) -> str:
     return f"{hours:02d}:{minutes:02d}:{remaining_seconds:02d}"
 
 def display_overview():
-    """Main function to display overview dashboard"""
-    st.header("Overview Dashboard")
+    import whatsapp
+    whatsapp.main()
+    # """Main function to display overview dashboard"""
+    # st.header("Overview Dashboard")
     
-    # Display unique group names
-    groups = get_unique_group_names()
-    if groups:
-        st.subheader("Available Groups")
-        for group in groups:
-            st.write(f"- {group}")
-    else:
-        st.warning("No groups found in the database")
+    # # Display unique group names
+    # groups = get_unique_group_names()
+    # if groups:
+    #     st.subheader("Available Groups")
+    #     for group in groups:
+    #         st.write(f"- {group}")
+    # else:
+    #     st.warning("No groups found in the database")
     
-    # Member selection dropdown
-    members = get_unique_members()
-    if members:
-        selected_member = st.selectbox(
-            "Select Member",
-            options=members,
-            help="Choose a member to view their data"
-        )
+    # # Member selection dropdown
+    # members = get_unique_members()
+    # if members:
+    #     selected_member = st.selectbox(
+    #         "Select Member",
+    #         options=members,
+    #         help="Choose a member to view their data"
+    #     )
         
-        # Data type selection dropdown
-        data_type = st.selectbox(
-            "Select Data Type",
-            options=["Zoom Attendance", "WhatsApp Chat", "Zoom Audio", "Zoom Chatbox"],
-            help="Choose the type of data to view"
-        )
+    #     # Data type selection dropdown
+    #     data_type = st.selectbox(
+    #         "Select Data Type",
+    #         options=["Zoom Attendance", "WhatsApp Chat", "Zoom Audio", "Zoom Chatbox"],
+    #         help="Choose the type of data to view"
+    #     )
         
-        if st.button("Show Data"):
-            if data_type == "Zoom Attendance":
-                attendance_data = get_zoom_attendance_data(selected_member)
-                if attendance_data:
-                    st.subheader(f"Zoom Attendance Data for {selected_member}")
+    #     if st.button("Show Data"):
+    #         if data_type == "Zoom Attendance":
+    #             attendance_data = get_zoom_attendance_data(selected_member)
+    #             if attendance_data:
+    #                 st.subheader(f"Zoom Attendance Data for {selected_member}")
                     
-                    # Group attendance by group name
-                    attendance_by_group = {}
-                    for record in attendance_data:
-                        group = record["group_name"]
-                        if group not in attendance_by_group:
-                            attendance_by_group[group] = []
-                        attendance_by_group[group].append(record)
+    #                 # Group attendance by group name
+    #                 attendance_by_group = {}
+    #                 for record in attendance_data:
+    #                     group = record["group_name"]
+    #                     if group not in attendance_by_group:
+    #                         attendance_by_group[group] = []
+    #                     attendance_by_group[group].append(record)
                     
-                    # Display attendance organized by group
-                    for group, records in attendance_by_group.items():
-                        st.write(f"### Group: {group}")
-                        total_duration = sum(record["duration"] for record in records)
-                        st.write(f"**Total Duration**: {total_duration} minutes")
+    #                 # Display attendance organized by group
+    #                 for group, records in attendance_by_group.items():
+    #                     st.write(f"### Group: {group}")
+    #                     total_duration = sum(record["duration"] for record in records)
+    #                     st.write(f"**Total Duration**: {total_duration} minutes")
                         
-                        for record in records:
-                            st.write(f"""
-                            **Date**: {record['date']}  
-                            **Duration**: {record['duration']} minutes  
-                            **Uploaded by**: {record['uploaded_by']}  
-                            ---
-                            """)
-                else:
-                    st.info("No Zoom attendance data found for this member")
+    #                     for record in records:
+    #                         st.write(f"""
+    #                         **Date**: {record['date']}  
+    #                         **Duration**: {record['duration']} minutes  
+    #                         **Uploaded by**: {record['uploaded_by']}  
+    #                         ---
+    #                         """)
+    #             else:
+    #                 st.info("No Zoom attendance data found for this member")
                     
-            elif data_type == "WhatsApp Chat":
-                chat_data = get_whatsapp_data(selected_member)
-                if chat_data:
-                    st.subheader(f"WhatsApp Chat Data for {selected_member}")
+    #         elif data_type == "WhatsApp Chat":
+    #             chat_data = get_whatsapp_data(selected_member)
+    #             if chat_data:
+    #                 st.subheader(f"WhatsApp Chat Data for {selected_member}")
                     
-                    # Group messages by group name
-                    messages_by_group = {}
-                    for msg in chat_data:
-                        group = msg["group_name"]
-                        if group not in messages_by_group:
-                            messages_by_group[group] = []
-                        messages_by_group[group].append(msg)
+    #                 # Group messages by group name
+    #                 messages_by_group = {}
+    #                 for msg in chat_data:
+    #                     group = msg["group_name"]
+    #                     if group not in messages_by_group:
+    #                         messages_by_group[group] = []
+    #                     messages_by_group[group].append(msg)
                     
-                    # Display messages organized by group
-                    for group, messages in messages_by_group.items():
-                        st.write(f"### Group: {group}")
-                        for msg in messages:
-                            tagged_info = f" (Tagged: {msg['tagged']})" if msg['tagged'] else ""
-                            st.write(f"""
-                            **Date**: {msg['date']} {msg['time']}  
-                            **Message**: {msg['message']}{tagged_info}  
-                            ---
-                            """)
-                else:
-                    st.info("No WhatsApp chat data found for this member")
+    #                 # Display messages organized by group
+    #                 for group, messages in messages_by_group.items():
+    #                     st.write(f"### Group: {group}")
+    #                     for msg in messages:
+    #                         tagged_info = f" (Tagged: {msg['tagged']})" if msg['tagged'] else ""
+    #                         st.write(f"""
+    #                         **Date**: {msg['date']} {msg['time']}  
+    #                         **Message**: {msg['message']}{tagged_info}  
+    #                         ---
+    #                         """)
+    #             else:
+    #                 st.info("No WhatsApp chat data found for this member")
                     
-            elif data_type == "Zoom Audio":
-                zoom_data = get_zoom_audio_data(selected_member)
-                if zoom_data:
-                    st.subheader(f"Zoom Audio Data for {selected_member}")
+    #         elif data_type == "Zoom Audio":
+    #             zoom_data = get_zoom_audio_data(selected_member)
+    #             if zoom_data:
+    #                 st.subheader(f"Zoom Audio Data for {selected_member}")
                     
-                    for session in zoom_data:
-                        st.write(f"### Group: {session['group_name']}")
-                        st.write(f"**Session Date**: {session['date']}")
-                        st.write(f"**Total Duration**: {format_duration(session['total_duration'])}")
+    #                 for session in zoom_data:
+    #                     st.write(f"### Group: {session['group_name']}")
+    #                     st.write(f"**Session Date**: {session['date']}")
+    #                     st.write(f"**Total Duration**: {format_duration(session['total_duration'])}")
                         
-                        st.write("#### Messages:")
-                        for msg in session["messages"]:
-                            st.write(f"""
-                            **Time**: {msg['time_stamp']}  
-                            **Message**: {msg['messages']}  
-                            ---
-                            """)
-                else:
-                    st.info("No Zoom audio data found for this member")
+    #                     st.write("#### Messages:")
+    #                     for msg in session["messages"]:
+    #                         st.write(f"""
+    #                         **Time**: {msg['time_stamp']}  
+    #                         **Message**: {msg['messages']}  
+    #                         ---
+    #                         """)
+    #             else:
+    #                 st.info("No Zoom audio data found for this member")
                     
-            else:  # Zoom Chatbox data # See this once more !!!
-                chatbox_data = get_zoom_chatbox_data(selected_member)
-                if chatbox_data:
-                    st.subheader(f"Zoom Chatbox Data for {selected_member}")
+    #         else:  # Zoom Chatbox data # See this once more !!!
+    #             chatbox_data = get_zoom_chatbox_data(selected_member)
+    #             if chatbox_data:
+    #                 st.subheader(f"Zoom Chatbox Data for {selected_member}")
                     
-                    for session in chatbox_data:
-                        st.write(f"### Group: {session['group_name']}")
-                        st.write(f"**Session Date**: {session['date']}")
+    #                 for session in chatbox_data:
+    #                     st.write(f"### Group: {session['group_name']}")
+    #                     st.write(f"**Session Date**: {session['date']}")
                         
-                        st.write("#### Messages:")
-                        for msg in session["messages"]:
-                            tagged_info = f" (Tagged: {msg['tagged']})" if msg['tagged'] else ""
-                            st.write(f"""
-                            **Time**: {msg['time_stamp']}  
-                            **Message**: {msg['message']}{tagged_info}  
-                            ---
-                            """)
-                else:
-                    st.info("No Zoom chatbox data found for this member")
-    else:
-        st.error("No members found in the database")
+    #                     st.write("#### Messages:")
+    #                     for msg in session["messages"]:
+    #                         tagged_info = f" (Tagged: {msg['tagged']})" if msg['tagged'] else ""
+    #                         st.write(f"""
+    #                         **Time**: {msg['time_stamp']}  
+    #                         **Message**: {msg['message']}{tagged_info}  
+    #                         ---
+    #                         """)
+    #             else:
+    #                 st.info("No Zoom chatbox data found for this member")
+    # else:
+    #     st.error("No members found in the database")

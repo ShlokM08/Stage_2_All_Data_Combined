@@ -7,6 +7,7 @@ from .display_overview_chats import *
 
 def admin_page(user_name):
     st.title(f"Admin Dashboard - {user_name}")
+    
 
     # Creating sidebar for navigation
     st.sidebar.title("Navigation")
