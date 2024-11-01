@@ -87,7 +87,7 @@ def initialize_database():
         st.session_state.db = st.session_state.client['kushal_maa_data']
 
 def main():
-    # Set background image (provide path to your local image)
+    #cg
     set_background("assets/Untitled design.jpg")
     
     st.markdown("<h1 class='title-style'>Kushal Maa Platform</h1>", unsafe_allow_html=True)
