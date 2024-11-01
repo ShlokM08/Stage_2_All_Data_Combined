@@ -177,8 +177,8 @@ def save_to_json(data, output_file):
 # Example usage
 if __name__ == "__main__":
     try:
-        input_file = "WhatsApp Chat with Whatupppp(Pixel_7a).txt"
-        output_file = "chat_output(KIng_In_Black_Phone_7a).json"
+        input_file = "Data\Whatsapp_Chats\WhatsApp Chat with Mélange Lab.txt"
+        output_file = "test_shlok.json"
         
         chat_data = parse_whatsapp_chat(input_file)
         save_to_json(chat_data, output_file)
