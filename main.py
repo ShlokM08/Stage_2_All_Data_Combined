@@ -88,7 +88,7 @@ def initialize_database():
 
 def main():
     # Set background image (provide path to your local image)
-    set_background("WIN_20240316_23_02_33_Pro.jpg")
+    set_background("assets\\Untitled design.jpg")
     
     st.markdown("<h1 class='title-style'>Kushal Maa Platform</h1>", unsafe_allow_html=True)
     st.markdown("<p class='subtitle-style'>An Interactive Platform for Admins and Moderators</p>", unsafe_allow_html=True)
